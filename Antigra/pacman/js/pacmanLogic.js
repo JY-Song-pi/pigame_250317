@@ -455,11 +455,16 @@ const PacmanGame = (() => {
 
             const nx = g.x + g.dx * speed;
             const ny = g.y + g.dy * speed;
-            if (!_wallHitGhost(nx, ny)) { g.x = nx; g.y = ny; }
+            // 실제 이동 시에도 특수 모드(leaving/eaten) 여부를 전달하여 문 통과 허용
+            if (!_wallHitGhost(nx, ny, g.leaving || g.eaten)) { 
+                g.x = nx; 
+                g.y = ny; 
+            }
 
             // 집 복귀 시 부활
             if (g.eaten && Math.hypot(g.x - g.homeX, g.y - g.homeY) < 4) {
                 g.eaten = false;
+                g.leaving = true; // 부활 후 다시 탈출 목표 설정
                 g.scared = powerActive;
             }
 
