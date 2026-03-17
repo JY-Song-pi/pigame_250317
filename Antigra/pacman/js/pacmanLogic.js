@@ -412,8 +412,15 @@ const PacmanGame = (() => {
                 // 타겟 설정
                 let targetX, targetY;
                 if (g.eaten) {
-                    targetX = g.homeX;
-                    targetY = g.homeY;
+                    // 집 안으로 들어갔는지 확인
+                    if (g.x > houseLeft && g.x < houseRight && g.y > houseTop && g.y < houseBottom) {
+                        targetX = g.homeX;
+                        targetY = g.homeY;
+                    } else {
+                        // 집 밖이면 일단 출구(문앞)로 유도
+                        targetX = exitX;
+                        targetY = exitY;
+                    }
                 } else if (g.leaving) {
                     // 집 탈출 중일 때는 무조건 출구 타겟팅
                     targetX = exitX;
@@ -481,8 +488,8 @@ const PacmanGame = (() => {
 
             if (row < 0 || row >= CFG.ROWS || col < 0 || col >= CFG.COLS) continue;
             
-            // 유령 집 입구 특수 처리 (row 9, col 8-10 부근)
-            if (isSpecialMode && row === 9 && col === 9) return false;
+            // 유령 집 입구 특수 처리 (row 9, col 9 가 통로)
+            if (isSpecialMode && row === 9 && col === 9) continue;
 
             if (map[row][col] === 1) return true;
         }
