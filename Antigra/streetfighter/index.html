@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>π Fighter — Pi Network Arcade</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Pi SDK (Mock for now, will be real in production) -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Header / HUD -->
+        <header id="game-hud">
+            <div class="hud-top">
+                <div class="player-info p1">
+                    <div class="hp-bar-container">
+                        <div id="p1-hp" class="hp-fill" style="width: 100%;"></div>
+                        <div id="p1-hp-hurt" class="hp-hurt"></div>
+                    </div>
+                    <div class="name-tag">PLAYER 1</div>
+                </div>
+                
+                <div id="match-timer">99</div>
+                
+                <div class="player-info p2">
+                    <div class="hp-bar-container">
+                        <div id="p2-hp" class="hp-fill" style="width: 100%;"></div>
+                        <div id="p2-hp-hurt" class="hp-hurt"></div>
+                    </div>
+                    <div class="name-tag">π BOT</div>
+                </div>
+            </div>
+            
+            <div class="hud-bottom">
+                <div class="energy-p1">
+                    <div id="p1-energy" class="energy-fill" style="width: 0%;"></div>
+                </div>
+                <div id="round-info">ROUND 1</div>
+                <div class="energy-p2">
+                    <div id="p2-energy" class="energy-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Game World -->
+        <main id="game-stage">
+            <canvas id="fighter-canvas"></canvas>
+            
+            <!-- Game Over / Start Overlay -->
+            <div id="overlay" class="hidden">
+                <h1 id="overlay-title">FIGHT!</h1>
+                <p id="overlay-msg">Ready for the Next Battle?</p>
+                <button id="start-btn" class="retry-btn">START GAME</button>
+            </div>
+        </main>
+
+        <!-- Mobile Controls -->
+        <footer id="controls-panel">
+            <div class="dpad">
+                <button id="btn-up" class="ctrl-btn up">▲</button>
+                <div class="dpad-mid">
+                    <button id="btn-left" class="ctrl-btn left">◀</button>
+                    <button id="btn-right" class="ctrl-btn right">▶</button>
+                </div>
+                <button id="btn-down" class="ctrl-btn down">▼</button>
+            </div>
+            
+            <div class="action-buttons">
+                <div class="btn-group">
+                    <button id="btn-punch" class="action-btn punch">P</button>
+                    <button id="btn-kick" class="action-btn kick">K</button>
+                </div>
+                <button id="btn-special" class="action-btn special">π</button>
+            </div>
+        </footer>
+
+        <!-- Back Link -->
+        <a href="../index.html" class="hub-link">← HUB</a>
+    </div>
+
+    <script src="js/piIntegration.js"></script>
+    <script src="js/fighterLogic.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('fighter-canvas');
+            const game = FighterGame.init(canvas, {
+                onHealthChange: (p1, p2) => {
+                    document.getElementById('p1-hp').style.width = p1 + '%';
+                    document.getElementById('p2-hp').style.width = p2 + '%';
+                },
+                onEnergyChange: (p1, p2) => {
+                    document.getElementById('p1-energy').style.width = p1 + '%';
+                    document.getElementById('p2-energy').style.width = p2 + '%';
+                },
+                onGameOver: (winner) => {
+                    const overlay = document.getElementById('overlay');
+                    document.getElementById('overlay-title').innerText = winner === 1 ? 'YOU WIN!' : 'KO!';
+                    document.getElementById('overlay-msg').innerText = 'Game Over';
+                    overlay.classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('start-btn').addEventListener('click', () => {
+                document.getElementById('overlay').classList.add('hidden');
+                game.startGame();
+            });
+            
+            // Initial call
+            game.startGame();
+        });
+    </script>
+</body>
+</html>
