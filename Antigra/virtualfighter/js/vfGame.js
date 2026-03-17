@@ -153,35 +153,45 @@ const VFGame = (() => {
     }
 
     function _handlePlayerInput() {
-        // 가드 상태 관리
         const held = VFInput.getHeld();
 
+        // ── 가드 ─────────────────────────────────────────────
         if (held.G) {
             const guardType = held.down ? 'crouch' : 'stand';
             p1.startGuard(guardType);
-        } else if (p1.state === 'block_stand' || p1.state === 'block_crouch') {
-            p1.stopGuard();
+        } else {
+            if (p1.state === 'block_stand' || p1.state === 'block_crouch') {
+                p1.stopGuard();
+            }
         }
 
-        // 앉기
-        if (!held.G) {
-            if (held.down && p1.state === 'idle') p1.crouch();
+        // ── 앉기 / 서기 ──────────────────────────────────────
+        if (!held.G && !['attack_startup','attack_active','attack_recovery','hit_stun','block_stun','dead'].includes(p1.state)) {
+            if (held.down && p1.state !== 'crouch') p1.crouch();
             else if (!held.down && p1.state === 'crouch') p1.setState('idle');
         }
 
-        // 점프
+        // ── 점프 ─────────────────────────────────────────────
         if (held.up && !p1.isJumping) p1.jump();
 
-        // 기술 입력 (콤보 우선, 없으면 단독 버튼)
+        // ── 기술 입력 (콤보 우선, 없으면 단독 버튼) ──────────
         const combo = VFInput.consumeCombo();
         if (combo) {
             p1.startMove(combo);
-        } else {
-            // 단독 버튼 입력은 즉시 소비형이 아니라 held 체크
-            // (단, 이전 프레임에서 누른 것만 소비하도록 버퍼 이용)
+            return;
         }
 
-        // 이동 처리: update() 내부에서 held 상태로 처리됨
+        // 단독 버튼: 버퍼에서 소비
+        if (VFInput.consumeButton('P')) {
+            // 앉기 중이면 low_punch, 점프 중이면 jump_punch, 평상시 stand_punch
+            if (p1.state === 'crouch')       p1.startMove('low_punch');
+            else if (p1.state === 'jump')    p1.startMove('jump_punch');
+            else                             p1.startMove('stand_punch');
+        } else if (VFInput.consumeButton('K')) {
+            if (p1.state === 'crouch')       p1.startMove('low_kick');
+            else if (p1.state === 'jump')    p1.startMove('jump_kick');
+            else                             p1.startMove('stand_kick');
+        }
     }
 
     function _getHeldForFighter(f) {
