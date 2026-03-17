@@ -412,12 +412,13 @@ const PacmanGame = (() => {
                 // 타겟 설정
                 let targetX, targetY;
                 if (g.eaten) {
-                    // 집 안으로 들어갔는지 확인
-                    if (g.x > houseLeft && g.x < houseRight && g.y > houseTop && g.y < houseBottom) {
+                    const nearExit = Math.abs(g.x - exitX) < 8 && Math.abs(g.y - exitY) < 8;
+                    const insideHouse = g.x > houseLeft && g.x < houseRight && g.y > houseTop;
+
+                    if (nearExit || insideHouse) {
                         targetX = g.homeX;
                         targetY = g.homeY;
                     } else {
-                        // 집 밖이면 일단 출구(문앞)로 유도
                         targetX = exitX;
                         targetY = exitY;
                     }
