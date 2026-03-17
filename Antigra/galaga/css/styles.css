@@ -1,0 +1,191 @@
+/* ═══ π GALAGA Global Styles ═══ */
+:root {
+    --purple: #A855F7;
+    --purple-dark: #6B3FA0;
+    --gold: #F5A623;
+    --gold-light: #FFCC55;
+    --bg-dark: #04020D;
+    --text: #F8FAFC;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(18, 12, 38, 0.85);
+    --danger: #FF4B6E;
+    --success: #2ED573;
+    --font-a: 'Orbitron', sans-serif;
+    --font-b: 'Press Start 2P', cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    width: 100vw;
+    height: 100dvh; /* 핵심: 모바일 브라우저 주소창 대응 */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: var(--font-a);
+    overflow: hidden;
+}
+
+/* ═══ 1. 헤더 (고정) ═══ */
+#game-header {
+    flex-shrink: 0;
+    height: 60px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border-bottom: 2px solid var(--purple-dark);
+    z-index: 100;
+}
+
+.logo-area { display: flex; align-items: center; gap: 0.8rem; }
+.btn-back { text-decoration: none; color: var(--purple); font-size: 0.8rem; font-weight: 900; }
+.game-title { font-family: var(--font-b); font-size: 0.7rem; color: var(--gold); }
+
+.stats-area { display: flex; align-items: center; gap: 1rem; }
+.stat-box { display: flex; flex-direction: column; align-items: center; }
+.stat-label { font-size: 0.38rem; color: var(--gold); font-family: var(--font-a); }
+.stat-value { font-size: 0.85rem; font-weight: 700; }
+.stat-value.gold { color: var(--gold-light); }
+
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 1rem; cursor: pointer; padding: 0.1rem 0.3rem;
+}
+
+/* ═══ 2. 메인 캔버스 영역 (나머지 공간 채움) ═══ */
+#canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+    background: radial-gradient(circle at center, #1A0E3A 0%, #04020D 100%);
+}
+
+#canvas-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 0 40px rgba(107, 63, 160, 0.2);
+    border-radius: 4px;
+}
+
+/* ═══ 3. 하단 컨트롤 (고정) ═══ */
+#controls {
+    flex-shrink: 0;
+    height: 140px;
+    background: var(--glass);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 100;
+}
+
+.control-flex {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.movement-group, .action-group { display: flex; gap: 1rem; }
+
+.ctrl-btn {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: 2px solid var(--purple);
+    background: rgba(168, 85, 247, 0.1);
+    color: var(--text);
+    font-size: 1.4rem;
+    display: flex; justify-content: center; align-items: center;
+    user-select: none;
+    transition: all 0.1s;
+}
+.ctrl-btn:active { transform: scale(0.9); background: var(--purple); }
+.ctrl-btn.fire { width: 80px; height: 80px; font-family: var(--font-b); font-size: 0.6rem; color: var(--gold); border-color: var(--gold); }
+.ctrl-btn.pause { font-size: 1.2rem; margin-left: 10px; }
+
+/* ═══ 4. 오버레이 ═══ */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(4, 2, 13, 0.95);
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 2rem; z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+.overlay.active { display: flex; }
+
+.ov-bg { position: absolute; font-size: 20rem; font-weight: 900; color: var(--purple); opacity: 0.03; pointer-events: none; z-index: -1; }
+.ov-title { font-family: var(--font-b); font-size: 1.4rem; color: var(--gold); margin-bottom: 2rem; }
+.ov-title.danger { color: var(--danger); }
+
+.ov-desc { font-size: 0.8rem; opacity: 0.8; margin-bottom: 2rem; line-height: 1.6; }
+
+.pi-reward-info {
+    width: 100%; max-width: 280px; margin-bottom: 2rem;
+    background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;
+}
+.reward-item { display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 0.5rem; }
+
+.btn {
+    width: 100%; max-width: 260px; padding: 1rem; border-radius: 12px;
+    font-family: var(--font-a); font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; border: none; transition: 0.2s; margin-bottom: 0.8rem;
+    display: flex; justify-content: center; align-items: center;
+}
+.btn.primary { background: linear-gradient(135deg, var(--gold), #D97706); color: #000; }
+.btn.secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
+.btn.warning { background: var(--purple); color: #fff; }
+
+.ov-user { font-size: 0.7rem; color: var(--gold-light); margin-top: 1rem; }
+
+/* 결과 박스 */
+.result-box { width: 100%; max-width: 260px; background: rgba(168,85,247,0.1); border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem; }
+.result-row { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.8rem; }
+
+@media (max-width: 480px) {
+    .ov-title { font-size: 1.1rem; }
+    .ctrl-btn { width: 56px; height: 56px; }
+    .ctrl-btn.fire { width: 70px; height: 70px; }
+    #controls { height: 130px; }
+}
+
+/* ═══ 5. 조이스틱 스타일 ═══ */
+#joystick-container {
+    width: 100px;
+    height: 100px;
+    z-index: 10;
+    margin-right: 20px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.joystick-base {
+    background: rgba(168, 85, 247, 0.15) !important;
+    border: 2px solid var(--purple-dark) !important;
+    box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.3) !important;
+    backdrop-filter: blur(5px) !important;
+    border-radius: 50%;
+}
+
+.joystick-stick {
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark)) !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6) !important;
+    border-radius: 50%;
+}

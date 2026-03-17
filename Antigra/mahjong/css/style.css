@@ -1,0 +1,175 @@
+/* ═══ π MAHJONG Global Styles ═══ */
+:root {
+    --purple: #A855F7;
+    --purple-dark: #6B3FA0;
+    --gold: #F5A623;
+    --gold-light: #FFCC55;
+    --bg-dark: #070312;
+    --text: #F8FAFC;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(22, 14, 48, 0.88);
+    --danger: #FF4B6E;
+    --success: #2ED573;
+    --font-a: 'Orbitron', sans-serif;
+    --font-b: 'Outfit', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    width: 100vw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: var(--font-b);
+    overflow: hidden;
+}
+
+/* ═══ 1. 헤더 (고정) ═══ */
+#game-header {
+    flex-shrink: 0;
+    height: 70px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border-bottom: 2px solid var(--purple-dark);
+    z-index: 100;
+}
+
+.logo-area { display: flex; align-items: center; gap: 0.8rem; }
+.btn-back { text-decoration: none; color: var(--purple); font-size: 0.8rem; font-weight: 900; font-family: var(--font-a); }
+.game-title { font-family: var(--font-a); font-size: 0.75rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; }
+
+.stats-area { display: flex; align-items: center; gap: 0.8rem; }
+.stat-box { display: flex; flex-direction: column; align-items: center; min-width: 60px; background: rgba(168, 85, 247, 0.1); padding: 4px 8px; border-radius: 8px; border: 1px solid rgba(168, 85, 247, 0.2); }
+.stat-label { font-size: 0.45rem; color: var(--gold); font-family: var(--font-a); font-weight: 700; opacity: 0.8; }
+.stat-value { font-size: 0.9rem; font-weight: 700; color: #fff; font-family: var(--font-a); }
+
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); font-size: 1.1rem; cursor: pointer; padding: 0.2rem 0.5rem;
+}
+
+/* ═══ 2. 메인 게임 영역 ═══ */
+#canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background: radial-gradient(circle at center, #0F0A2A 0%, #03010A 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+#canvas-wrapper {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+}
+
+#game-canvas {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    /* 마작패의 세밀한 그래픽을 위해 pixelated는 게임 사정에 따라 선택 (여기선 끔) */
+}
+
+.message-bubble {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(168, 85, 247, 0.9);
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 40px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    z-index: 50;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+/* ═══ 3. 하단 컨트롤: 아이템 바 ═══ */
+#controls {
+    flex-shrink: 0;
+    height: 100px;
+    background: var(--glass);
+    border-top: 1px solid var(--purple-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    padding-bottom: env(safe-area-inset-bottom);
+    gap: 1.5rem;
+}
+
+.item-bar { display: flex; gap: 1rem; align-items: center; }
+
+.item-btn {
+    display: flex; flex-direction: column; align-items: center; border: none; background: none; color: #fff; cursor: pointer; transition: 0.2s;
+}
+.item-btn:active { transform: translateY(2px); opacity: 0.8; }
+
+.item-icon {
+    width: 44px; height: 44px; border-radius: 12px; background: rgba(168, 85, 247, 0.15); border: 1px solid var(--purple); display: flex; justify-content: center; align-items: center; font-size: 1.3rem; margin-bottom: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.item-label { font-size: 0.5rem; font-family: var(--font-a); font-weight: 700; color: #fff; opacity: 0.7; }
+.item-cost { font-size: 0.55rem; color: var(--gold); font-weight: 800; }
+
+.pause-btn {
+    position: absolute; right: 20px;
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-size: 1.2rem; cursor: pointer;
+}
+
+/* ═══ 4. 오버레이 ═══ */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(3, 1, 10, 0.92);
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 2rem; z-index: 1000;
+    backdrop-filter: blur(12px);
+}
+.overlay.active { display: flex; }
+
+.ov-bg { position: absolute; font-size: 20rem; font-weight: 900; color: var(--purple); opacity: 0.03; pointer-events: none; z-index: -1; }
+.ov-title { font-family: var(--font-a); font-size: 1.8rem; color: var(--gold); margin-bottom: 1.5rem; letter-spacing: 2px; }
+.ov-desc { font-size: 0.9rem; margin-bottom: 2.5rem; line-height: 1.7; color: #CBD5E1; max-width: 300px; }
+
+.btn {
+    width: 100%; max-width: 260px; padding: 1.1rem; border-radius: 14px;
+    font-weight: 700; font-size: 0.95rem; font-family: var(--font-a);
+    cursor: pointer; border: none; transition: 0.3s; margin-bottom: 0.8rem;
+}
+.btn.primary { background: linear-gradient(135deg, var(--gold), #CA8A04); color: #000; box-shadow: 0 4px 15px rgba(202, 138, 4, 0.3); }
+.btn.secondary { background: rgba(168, 85, 247, 0.1); color: #fff; border: 1px solid var(--purple-dark); }
+
+.modal-content {
+    background: var(--glass);
+    border: 1px solid var(--purple-dark);
+    padding: 2.5rem; border-radius: 28px;
+    width: 90%; max-width: 420px;
+}
+
+.popup-info { margin: 1.5rem 0; font-size: 0.95rem; color: #fff; line-height: 1.6; }
+
+.tutorial-content .scroll-area {
+    max-height: 50vh; overflow-y: auto; text-align: left; margin-bottom: 1.5rem; padding-right: 10px;
+}
+.tutorial-content p { margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.6; color: #CBD5E1; }
+.tutorial-content::-webkit-scrollbar { width: 4px; }
+.tutorial-content::-webkit-scrollbar-thumb { background: var(--purple-dark); border-radius: 10px; }
+
+@media (max-width: 480px) {
+    #game-header { height: 65px; padding: 0 0.8rem; }
+    #controls { height: 90px; }
+    .item-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+}
+
+.hidden { display: none !important; }

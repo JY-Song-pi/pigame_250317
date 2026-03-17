@@ -1,0 +1,178 @@
+/* ═══ π PAC-MAN Global Styles ═══ */
+:root {
+    --purple: #A855F7;
+    --purple-dark: #6B3FA0;
+    --gold: #F5A623;
+    --gold-light: #FFCC55;
+    --bg-dark: #04020D;
+    --text: #F8FAFC;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(18, 12, 38, 0.85);
+    --danger: #FF4B6E;
+    --success: #2ED573;
+    --pac-yellow: #FFE000;
+    --font-a: 'Orbitron', sans-serif;
+    --font-b: 'Press Start 2P', cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    width: 100vw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: var(--font-a);
+    overflow: hidden;
+}
+
+/* ═══ 1. 헤더 (고정) ═══ */
+#game-header {
+    flex-shrink: 0;
+    height: 60px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border-bottom: 2px solid var(--purple-dark);
+    z-index: 100;
+}
+
+.logo-area { display: flex; align-items: center; gap: 0.8rem; }
+.btn-back { text-decoration: none; color: var(--purple); font-size: 0.8rem; font-weight: 900; }
+.game-title { font-family: var(--font-b); font-size: 0.7rem; color: var(--pac-yellow); }
+
+.stats-area { display: flex; align-items: center; gap: 1rem; }
+.stat-box { display: flex; flex-direction: column; align-items: center; }
+.stat-label { font-size: 0.38rem; color: var(--gold); }
+.stat-value { font-size: 0.85rem; font-weight: 700; color: #fff; }
+
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 1rem; cursor: pointer; padding: 0.1rem 0.3rem;
+}
+
+/* ═══ 2. 메인 캔버스 영역 ═══ */
+#canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #000; /* 팩맨의 클래식한 검은색 배경 */
+}
+
+#canvas-wrapper {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+}
+
+#game-canvas {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    box-shadow: 0 0 40px rgba(33, 33, 255, 0.2); /* 클래식 블루 맵 광호광 */
+}
+
+/* ═══ 3. 하단 컨트롤 ═══ */
+#controls {
+    flex-shrink: 0;
+    height: 180px;
+    background: var(--glass);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+}
+
+.control-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+}
+
+.control-hint { display: none; }
+
+.dpad { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.dpad-mid { display: flex; gap: 40px; }
+
+.ctrl-btn {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    border: 1px solid var(--purple);
+    background: rgba(168, 85, 247, 0.1);
+    color: #fff; font-size: 1.2rem;
+    display: flex; justify-content: center; align-items: center;
+    user-select: none;
+}
+.ctrl-btn:active, .ctrl-btn.active { background: var(--purple); transform: scale(0.95); }
+
+.ctrl-btn.pause { position: absolute; right: 20px; bottom: 40px; width: 44px; height: 44px; opacity: 0.7; }
+
+/* ═══ 4. 오버레이 ═══ */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 2rem; z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+.overlay.active { display: flex; }
+
+.ov-bg { position: absolute; font-size: 20rem; font-weight: 900; color: var(--pac-yellow); opacity: 0.05; pointer-events: none; z-index: -1; }
+.ov-title { font-family: var(--font-b); font-size: 1.4rem; color: var(--pac-yellow); margin-bottom: 2rem; }
+.ov-title.danger { color: var(--danger); }
+
+.ov-desc { font-size: 0.8rem; opacity: 0.8; margin-bottom: 2rem; line-height: 1.6; }
+
+.btn {
+    width: 100%; max-width: 260px; padding: 1rem; border-radius: 12px;
+    font-family: var(--font-a); font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; border: none; transition: 0.2s; margin-bottom: 0.8rem;
+}
+.btn.primary { background: linear-gradient(135deg, var(--gold), #D97706); color: #000; }
+.btn.secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
+
+.result-box { width: 100%; max-width: 260px; background: rgba(33, 33, 255, 0.1); border: 1px solid rgba(33, 33, 255, 0.3); border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem; }
+.result-row { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.8rem; }
+.rv.gold { color: var(--gold-light); }
+
+@media (max-width: 480px) {
+    #controls { height: 180px; }
+    .control-flex { gap: 20px; }
+    .ctrl-btn { width: 44px; height: 44px; }
+    .dpad-mid { gap: 30px; }
+    #joystick-container { width: 90px; height: 90px; }
+}
+
+/* ═══ 5. 조이스틱 스타일 ═══ */
+#joystick-container {
+    display: block;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.joystick-base {
+    background: rgba(168, 85, 247, 0.15) !important;
+    border: 2px solid var(--purple-dark) !important;
+    box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.3) !important;
+    backdrop-filter: blur(5px) !important;
+    border-radius: 50%;
+}
+
+.joystick-stick {
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark)) !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6) !important;
+    border-radius: 50%;
+}

@@ -1,0 +1,21 @@
+{
+	"siteId": "8891c7d3-7338-4d3e-a2bf-5e8fcc90bfbb",
+	"geolocation": {
+		"data": {
+			"city": "Geumsan-gun",
+			"country": {
+				"code": "KR",
+				"name": "South Korea"
+			},
+			"subdivision": {
+				"code": "44",
+				"name": "Chungcheongnam-do"
+			},
+			"timezone": "Asia/Seoul",
+			"latitude": 36.1024,
+			"longitude": 127.4829,
+			"postalCode": "327"
+		},
+		"timestamp": 1773469127209
+	}
+}

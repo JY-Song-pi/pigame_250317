@@ -1,0 +1,255 @@
+/* ==========================================
+   π BREAKOUT — 완전 재작성 CSS (모바일 퍼스트)
+   핵심 구조:
+     body (100dvh, column flex)
+      ├─ #game-header  (flex-shrink:0)
+      ├─ #canvas-area  (flex:1, min-height:0)
+      └─ #controls     (flex-shrink:0)
+   오버레이: position:fixed, body 직속
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap');
+
+/* ── 변수 ─────────────────────────────────────── */
+:root {
+    --purple:        #6B3FA0;
+    --purple-light:  #8B5CC8;
+    --purple-dark:   #3D1E6E;
+    --gold:          #F5A623;
+    --gold-light:    #FFCC55;
+    --danger:        #FF4B6E;
+    --success:       #2ED573;
+    --bg:            #080410;
+    --panel:         rgba(26, 10, 48, 0.85);
+    --border:        rgba(139, 92, 200, 0.28);
+    --text:          #F0E8FF;
+    --font-h:        'Orbitron', sans-serif;
+    --font-a:        'Press Start 2P', cursive;
+    /* 하단 컨트롤 고정 높이 */
+    --ctrl-h:        80px;
+    --safe-bottom:   env(safe-area-inset-bottom, 0px);
+}
+
+/* ── 리셋 ─────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* ── body: 세로 기둥 ──────────────────────────── */
+html, body {
+    width: 100%; height: 100%;
+    /* dvh: 모바일 주소창 포함 실제 뷰포트 */
+    height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-h);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── 헤더 ─────────────────────────────────────── */
+#game-header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8, 4, 16, 0.96);
+    z-index: 10;
+}
+.logo-area { display: flex; align-items: center; gap: 0.5rem; }
+.game-title { font-size: 0.9rem; color: var(--purple-light); font-weight: 900; letter-spacing: 2px; }
+.btn-back {
+    font-family: var(--font-a); font-size: 0.4rem;
+    color: var(--text); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 4px; padding: 0.25rem 0.4rem;
+}
+.stats-area { display: flex; gap: 0.4rem; }
+.stat-box {
+    display: flex; flex-direction: column; align-items: flex-end;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0.2rem 0.4rem;
+}
+.stat-label { font-size: 0.38rem; color: var(--gold); font-family: var(--font-a); }
+.stat-value { font-size: 0.85rem; font-weight: 700; }
+.stat-value.gold { color: var(--gold-light); }
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 1.1rem; cursor: pointer; padding: 0.1rem 0.3rem;
+    transition: opacity 0.2s;
+}
+.mute-btn.muted { opacity: 0.4; }
+
+/* ── 캔버스 영역: 나머지 공간 모두 사용 ─────── */
+#canvas-area {
+    flex: 1 1 auto;
+    min-height: 0;           /* flex child가 내용 기준으로 줄어들 수 있게 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    overflow: hidden;
+    position: relative;
+}
+#game-canvas {
+    display: block;
+    /* 부모 영역에 맞게 스케일 → JS에서 canvas.width/height는 논리 해상도 유지 */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+/* ── 하단 컨트롤: 항상 고정 / 절대 사라지지 않음 */
+#controls {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center; /* 중앙으로 모음 */
+    align-items: center;
+    gap: 30px; /* 그룹 간 간격 */
+    height: calc(var(--ctrl-h) + var(--safe-bottom));
+    padding: 0.5rem 1rem;
+    padding-bottom: calc(0.5rem + var(--safe-bottom));
+    background: rgba(8, 4, 16, 0.90);
+    border-top: 1px solid var(--border);
+}
+#move-group {
+    display: flex;
+    gap: 15px; /* 이동 버튼끼리 밀착 */
+}
+.ctrl-btn {
+    width: 60px; height: 60px; /* 소폭 확대 */
+    border-radius: 50%;
+    background: rgba(107, 63, 160, 0.15);
+    border: 2px solid var(--purple);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.4rem; color: var(--text);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    transition: background 0.1s, transform 0.1s;
+}
+.ctrl-btn:active, .ctrl-btn.active {
+    background: rgba(245, 166, 35, 0.25);
+    border-color: var(--gold);
+    transform: scale(0.93);
+}
+.pause-btn { 
+    width: 48px; height: 48px; /* 일시정지는 작게 */
+    font-size: 1.2rem; 
+    margin-left: 20px; /* 오른쪽으로 소폭 분리 */
+}
+
+/* ── 조이스틱 스타일 ── */
+#joystick-container {
+    margin-right: 15px;
+    z-index: 100;
+}
+.joystick-base {
+    background: rgba(107, 63, 160, 0.1);
+    border: 2px solid rgba(139, 92, 200, 0.3);
+    backdrop-filter: blur(4px);
+    box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.2);
+}
+.joystick-stick {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(245, 166, 35, 0.5);
+}
+
+/* ── 오버레이: body 직속, position:fixed ──────── */
+.overlay {
+    position: fixed;
+    inset: 0;                 /* top/right/bottom/left = 0 */
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 2, 12, 0.94);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1.5rem 1.5rem calc(1.5rem + var(--safe-bottom));
+    text-align: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    overflow-y: auto;
+}
+.overlay.active { opacity: 1; pointer-events: all; }
+
+/* 배경 π */
+.ov-bg {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 9rem; opacity: 0.05;
+    font-family: var(--font-h); color: var(--purple);
+    pointer-events: none; z-index: 0;
+}
+/* 오버레이 내용물은 배경 위 */
+.overlay > * { position: relative; z-index: 1; }
+
+.ov-title {
+    font-family: var(--font-a); font-size: 1.1rem; line-height: 1.6;
+    color: var(--gold-light);
+    text-shadow: 0 0 14px rgba(255, 204, 85, .5);
+}
+.ov-title.danger  { color: var(--danger);  text-shadow: 0 0 14px rgba(255,75,110,.5); }
+.ov-title.success { color: var(--success); text-shadow: 0 0 14px rgba(46,213,115,.5); }
+.ov-desc   { font-size: 0.78rem; opacity: 0.75; line-height: 1.6; }
+.ov-hint   { font-size: 0.62rem; opacity: 0.6; line-height: 1.6; max-width: 240px; border: 1px solid rgba(139,92,200,0.3); border-radius: 8px; padding: 0.4rem 0.6rem; }
+.ov-user   { font-size: 0.65rem; color: var(--gold-light); }
+
+/* 결과 박스 */
+.result-box {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.8rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.4rem; width: 100%; max-width: 260px;
+}
+.result-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.7rem;
+}
+.rv { font-size: 0.95rem; font-weight: 700; }
+.rv.gold { color: var(--gold-light); }
+
+/* 버튼 */
+.btn {
+    width: 100%; max-width: 220px;
+    padding: 0.65rem 1rem;
+    font-family: var(--font-h); font-size: 0.7rem; font-weight: 700;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.btn:active { transform: scale(0.96); }
+.btn.primary  { background: linear-gradient(135deg, var(--gold) 0%, #B57800 100%); color: #1a0a00; box-shadow: 0 4px 16px rgba(245,166,35,.4); }
+.btn.secondary { background: var(--panel); border: 1px solid var(--border); color: var(--text); }
+.btn.warning  { background: linear-gradient(135deg, var(--danger) 0%, #9B1E36 100%); color: #fff; box-shadow: 0 4px 16px rgba(255,75,110,.4); }
+
+/* ── 데스크탑 보정 (768px 이상) ──────────────── */
+@media (min-width: 768px) {
+    html, body { align-items: center; }
+    #game-header {
+        width: 100%; max-width: 520px;
+        border-radius: 12px 12px 0 0;
+        border: 1px solid var(--border); border-bottom: none;
+    }
+    #canvas-area {
+        width: 100%; max-width: 520px;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+    }
+    #controls {
+        width: 100%; max-width: 520px;
+        border-radius: 0 0 12px 12px;
+        border: 1px solid var(--border); border-top: none;
+    }
+    .ov-title { font-size: 1.3rem; }
+}

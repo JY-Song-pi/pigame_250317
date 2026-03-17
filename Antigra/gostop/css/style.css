@@ -1,0 +1,147 @@
+/* ═══ π GO-STOP Global Styles ═══ */
+:root {
+    --purple: #A855F7;
+    --purple-dark: #6B3FA0;
+    --gold: #F5A623;
+    --gold-light: #FFCC55;
+    --bg-dark: #0A0F1E; /* 조금 더 깊은 남색 계열 배경 */
+    --text: #F8FAFC;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(18, 12, 38, 0.85);
+    --danger: #FF4B6E;
+    --success: #2ED573;
+    --font-a: 'Orbitron', sans-serif;
+    --font-b: 'Noto Sans KR', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    width: 100vw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: var(--font-b);
+    overflow: hidden;
+}
+
+/* ═══ 1. 헤더 (고정) ═══ */
+#game-header {
+    flex-shrink: 0;
+    height: 65px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border-bottom: 2px solid var(--purple-dark);
+    z-index: 100;
+}
+
+.logo-area { display: flex; align-items: center; gap: 0.8rem; }
+.btn-back { text-decoration: none; color: var(--purple); font-size: 0.8rem; font-weight: 900; font-family: var(--font-a); }
+.game-title { font-family: var(--font-a); font-size: 0.8rem; font-weight: 700; color: var(--gold); }
+
+.stats-area { display: flex; align-items: center; gap: 1rem; }
+.stat-box { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
+.stat-label { font-size: 0.5rem; color: var(--gold); font-family: var(--font-a); font-weight: 700; }
+.stat-value { font-size: 1rem; font-weight: 700; color: #fff; }
+
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 1rem; cursor: pointer; padding: 0.1rem 0.3rem;
+}
+
+/* ═══ 2. 메인 게임 영역 ═══ */
+#canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    background: radial-gradient(circle at center, #1E3A8A 0%, #0A192F 100%); /* 전통적인 고스톱판 느낌의 딥 블루 */
+    position: relative;
+}
+
+#canvas-wrapper {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+}
+
+#gameCanvas {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    /* 고스톱 게임은 캔버스 내부에서 화투 이미지가 고해상도여야 하므로 pixelated 제외 */
+}
+
+.message-bubble {
+    position: absolute;
+    top: 20%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(245, 166, 35, 0.9);
+    color: #000;
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 50;
+    transition: 0.3s;
+}
+.hidden { display: none !important; }
+
+/* ═══ 3. 하단 컨트롤 ═══ */
+#controls {
+    flex-shrink: 0;
+    height: 40px;
+    background: var(--glass);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 0.7rem; color: var(--gold-light); opacity: 0.7;
+    border-top: 1px solid var(--border);
+}
+
+/* ═══ 4. 오버레이 ═══ */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 2rem; z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+.overlay.active { display: flex; }
+
+.ov-bg { position: absolute; font-size: 20rem; font-weight: 900; color: var(--gold); opacity: 0.03; pointer-events: none; z-index: -1; }
+.ov-title { font-family: var(--font-a); font-size: 1.8rem; color: var(--gold); margin-bottom: 1.5rem; }
+.ov-title.danger { color: var(--danger); }
+.ov-desc { font-size: 0.9rem; margin-bottom: 2rem; line-height: 1.6; color: #CBD5E1; }
+
+.btn {
+    width: 100%; max-width: 260px; padding: 1.1rem; border-radius: 14px;
+    font-weight: 700; font-size: 1rem;
+    cursor: pointer; border: none; transition: 0.3s; margin-bottom: 0.8rem;
+}
+.btn.primary { background: linear-gradient(135deg, var(--gold), #D97706); color: #000; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3); }
+.btn.secondary { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); }
+
+.modal-content {
+    background: var(--glass);
+    border: 1px solid var(--purple-dark);
+    padding: 2.5rem; border-radius: 24px;
+    width: 90%; max-width: 400px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.btn-group { display: flex; gap: 10px; justify-content: center; width: 100%; margin-top: 1rem; }
+.btn-group .btn { flex: 1; max-width: 130px; margin-bottom: 0; }
+
+.result-box { width: 100%; max-width: 300px; background: rgba(168, 85, 247, 0.05); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; }
+.result-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.9rem; }
+.rv.gold { color: var(--gold-light); font-weight: 700; }
+
+@media (max-width: 480px) {
+    #game-header { height: 60px; }
+    .ov-title { font-size: 1.4rem; }
+}

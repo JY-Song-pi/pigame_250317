@@ -1,0 +1,221 @@
+/* ═══ π TETRIS Global Styles ═══ */
+:root {
+    --purple: #A855F7;
+    --purple-dark: #6B3FA0;
+    --gold: #F5A623;
+    --gold-light: #FFCC55;
+    --bg-dark: #04020D;
+    --text: #F8FAFC;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(18, 12, 38, 0.85);
+    --danger: #FF4B6E;
+    --success: #2ED573;
+    --font-a: 'Orbitron', sans-serif;
+    --font-b: 'Press Start 2P', cursive;
+
+    /* π Tetris Pi-Themed Colors */
+    --tet-i: #A855F7; /* Vivid Purple */
+    --tet-j: #6B3FA0; /* Deep Pi Purple */
+    --tet-l: #F5A623; /* Pi Gold */
+    --tet-o: #FFCC55; /* Light Gold */
+    --tet-s: #C084FC; /* Lavender */
+    --tet-t: #E879F9; /* Magenta-Purple */
+    --tet-z: #FDBA74; /* Amber-Orange */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    width: 100vw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: var(--font-a);
+    overflow: hidden;
+    position: fixed; /* 줌/스크롤 방지 */
+}
+
+/* ═══ 1. 헤더 (고정) ═══ */
+#game-header {
+    flex-shrink: 0;
+    height: 48px;
+    padding: 0 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border-bottom: 2px solid var(--purple-dark);
+    z-index: 100;
+}
+
+.logo-area { display: flex; align-items: center; gap: 0.8rem; }
+.btn-back { text-decoration: none; color: var(--purple); font-size: 0.8rem; font-weight: 900; }
+.game-title { font-family: var(--font-b); font-size: 0.7rem; color: var(--gold); }
+
+.stats-area { display: flex; align-items: center; gap: 0.8rem; }
+.stat-box { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
+.stat-label { font-size: 0.35rem; color: var(--gold); font-family: var(--font-b); }
+.stat-value { font-size: 0.8rem; font-weight: 700; color: #fff; }
+
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 0.9rem; cursor: pointer; padding: 0.1rem 0.2rem;
+}
+
+/* ═══ 2. 메인 게임 영역 ═══ */
+#canvas-area {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 15px;
+    position: relative;
+    background: radial-gradient(circle at center, #1A0E3A 0%, #04020D 100%);
+    overflow: hidden;
+}
+
+#canvas-wrapper {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-canvas {
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    border: 2px solid var(--purple-dark);
+    box-shadow: 0 0 30px rgba(107, 63, 160, 0.3);
+    background: rgba(0,0,0,0.5);
+}
+
+#side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.next-box {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#next-canvas {
+    width: 60px;
+    height: 60px;
+    margin-top: 5px;
+}
+
+/* ═══ 3. 하단 컨트롤 ═══ */
+#controls {
+    flex-shrink: 0;
+    height: 110px;
+    background: var(--glass);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝으로 벌리기 */
+    align-items: center;
+    padding: 0 1.5rem; /* 좌우 여백 확보 */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 5px);
+}
+
+.move-controls { display: flex; gap: 8px; align-items: center; } /* 4개 버튼을 위해 간격 소폭 축소 */
+.action-controls { display: flex; gap: 15px; align-items: center; }
+
+.ctrl-btn {
+    width: 50px; height: 50px; /* 4개를 한 그룹에 넣기 위해 소폭 축소 (기존 54) */
+    border-radius: 12px;
+    border: 1px solid var(--purple);
+    background: rgba(168, 85, 247, 0.1);
+    color: #fff; font-size: 1.2rem;
+    display: flex; justify-content: center; align-items: center;
+    user-select: none;
+}
+.ctrl-btn:active { background: var(--purple); transform: scale(0.95); }
+
+.ctrl-btn.drop { width: 56px; height: 56px; border-color: var(--gold); background: rgba(245, 166, 35, 0.1); }
+.ctrl-btn.rotate { 
+    width: 60px; height: 50px; /* 기존 80에서 축소 */
+    font-size: 0.5rem; /* 텍스트 크기 조절 */
+    font-family: var(--font-b); 
+    color: var(--gold-light); 
+}
+.ctrl-btn.pause { width: 44px; height: 44px; border-radius: 50%; font-size: 1rem; }
+
+/* ═══ 4. 오버레이 ═══ */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(4, 2, 13, 0.95);
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 2rem; z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+.overlay.active { display: flex; }
+
+.ov-bg { position: absolute; font-size: 20rem; font-weight: 900; color: var(--purple); opacity: 0.05; pointer-events: none; z-index: -1; }
+.ov-title { font-family: var(--font-b); font-size: 1.4rem; color: var(--gold); margin-bottom: 2rem; }
+.ov-title.danger { color: var(--danger); }
+
+.btn {
+    width: 100%; max-width: 260px; padding: 1rem; border-radius: 12px;
+    font-family: var(--font-a); font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; border: none; transition: 0.2s; margin-bottom: 0.8rem;
+}
+.btn.primary { background: linear-gradient(135deg, var(--gold), #D97706); color: #000; }
+.btn.secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
+
+.result-box { width: 100%; max-width: 260px; background: rgba(168,85,247,0.1); border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem; }
+.result-row { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.8rem; }
+.rv.gold { color: var(--gold-light); }
+
+/* ═══ 5. Responsive Fixes (Aggressive) ═══ */
+@media (max-width: 480px) {
+    #game-header { height: 44px !important; padding: 0 0.5rem !important; }
+    #game-header .game-title { font-size: 0.6rem !important; }
+    .stat-box { min-width: 40px !important; }
+    .stat-value { font-size: 0.7rem !important; }
+    
+    #canvas-area { 
+        padding: 5px !important; 
+        gap: 5px !important; 
+        flex: 1 !important;
+        min-height: 0 !important;
+        max-height: calc(100svh - 44px - 100px - 20px) !important;
+        overflow: hidden !important;
+    }
+    #canvas-wrapper { height: 100% !important; width: auto !important; aspect-ratio: 10 / 20 !important; }
+    #game-canvas { border-width: 1px !important; height: 100% !important; width: auto !important; }
+    
+    #side-panel { gap: 8px !important; }
+    .next-box { padding: 4px !important; }
+    #next-canvas { width: 40px !important; height: 40px !important; }
+    
+    #controls { 
+        height: 100px !important; 
+        padding: 5px !important;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 5px) !important;
+        gap: 5px !important;
+    }
+    .ctrl-btn { width: 44px !important; height: 44px !important; font-size: 1rem !important; border-radius: 8px !important; }
+    .ctrl-btn.rotate { width: 68px !important; height: 44px !important; font-size: 0.5rem !important; }
+    .ctrl-btn.drop { width: 52px !important; height: 52px !important; }
+    .ctrl-btn.pause { width: 32px !important; height: 32px !important; font-size: 0.8rem !important; }
+}
+
+@media (max-height: 640px) {
+    #game-header { height: 36px !important; }
+    #canvas-area { max-height: calc(100svh - 36px - 85px - 10px) !important; }
+    #controls { height: 85px !important; }
+    .ctrl-btn { width: 36px !important; height: 36px !important; font-size: 0.8rem !important; }
+    .ctrl-btn.rotate { width: 54px !important; height: 36px !important; font-size: 0.45rem !important; }
+}

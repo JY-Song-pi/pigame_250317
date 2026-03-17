@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>π SAJU — Pi Network Divination</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ═══ 헤더: 최상단 고정 ═══ -->
+    <header id="page-header">
+        <div class="logo-area">
+            <a href="../index.html" class="btn-back">← Hub</a>
+            <span class="game-title">π SAJU</span>
+        </div>
+        <div class="user-area">
+            <span id="username-display">Pi User</span>
+        </div>
+    </header>
+
+    <!-- ═══ 메인 영역: 입력 및 결과 ═══ -->
+    <main id="content-area">
+        <!-- 1. 입력 섹션 -->
+        <section id="input-section" class="glass-panel active">
+            <h2 class="section-title">운명의 바퀴를 돌리세요</h2>
+            <p class="section-desc">정확한 사주 분석을 위해<br>태어난 날짜와 시간을 입력해주세요.</p>
+            
+            <div class="form-group">
+                <label>이름 (Name)</label>
+                <input type="text" id="input-name" placeholder="홍길동" maxlength="10">
+            </div>
+
+            <div class="form-group">
+                <label>생년월일 (Birth Date)</label>
+                <input type="date" id="input-date" value="1995-01-01">
+            </div>
+
+            <div class="form-group">
+                <label>태어난 시간 (Birth Time)</label>
+                <select id="input-time">
+                    <option value="-1">모름 (Unknown)</option>
+                    <option value="0">子 (23:30 ~ 01:30)</option>
+                    <option value="1">丑 (01:30 ~ 03:30)</option>
+                    <option value="2">寅 (03:30 ~ 05:30)</option>
+                    <option value="3">卯 (05:30 ~ 07:30)</option>
+                    <option value="4">辰 (07:30 ~ 09:30)</option>
+                    <option value="5">巳 (09:30 ~ 11:30)</option>
+                    <option value="6">午 (11:30 ~ 13:30)</option>
+                    <option value="7">未 (13:30 ~ 15:30)</option>
+                    <option value="8">申 (15:30 ~ 17:30)</option>
+                    <option value="9">酉 (17:30 ~ 19:30)</option>
+                    <option value="10">戌 (19:30 ~ 21:30)</option>
+                    <option value="11">亥 (21:30 ~ 23:30)</option>
+                </select>
+            </div>
+
+            <div class="form-group toggle-group">
+                <label>양력/음력</label>
+                <div class="toggle-btns">
+                    <button class="toggle-btn active" data-value="solar">양력</button>
+                    <button class="toggle-btn" data-value="lunar">음력</button>
+                </div>
+            </div>
+
+            <button id="btn-analyze" class="btn-primary">사주 분석하기 (Analyze)</button>
+        </section>
+
+        <!-- 2. 결과 섹션 (기본) -->
+        <section id="result-section" class="glass-panel hidden">
+            <div class="result-header">
+                <div id="user-manifesto"></div>
+                <h3 id="result-title">평생의 운명 리포트</h3>
+            </div>
+            
+            <!-- 사주 팔자 표 -->
+            <div class="saju-table" id="saju-table">
+                <!-- JS에서 생성 -->
+            </div>
+
+            <div class="scroll-content">
+                <div class="report-box free">
+                    <h4>✨ 오늘의 운세 (Free)</h4>
+                    <p id="desc-today">로그 분석 중...</p>
+                </div>
+
+                <div class="report-box premium locked">
+                    <div class="lock-overlay">
+                        <span class="icon">🔒</span>
+                        <p>상세 평생 총운 및 2026년 신수</p>
+                        <button id="btn-pay-pi" class="btn-pi">
+                            <span class="pi">π</span> 1 Pi 결제하고 열기
+                        </button>
+                    </div>
+                    <h4>💎 상세 분석 리포트</h4>
+                    <p class="blurred-text">
+                        당신의 사주는 강한 금의 기운을 가지고 태어났으며... (결제 시 공개)
+                        재물운의 흐름이 2026년부터 급격히 상승하는 국면을 맞이하게 됩니다...
+                    </p>
+                </div>
+            </div>
+
+            <button id="btn-reset" class="btn-secondary">다시 입력하기</button>
+        </section>
+    </main>
+
+    <!-- ═══ 푸터 ═══ -->
+    <footer id="page-footer">
+        <p>© 2025 π Divination &nbsp;·&nbsp; Powered by Pi Network</p>
+    </footer>
+
+    <script src="js/sajuLogic.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

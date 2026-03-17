@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>π MAHJONG — Pi Network Arcade</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+    <!-- ═══ 헤더: 최상단 고정 (flex-shrink: 0) ═══ -->
+    <header id="game-header">
+        <div class="logo-area">
+            <a href="../index.html" class="btn-back">← Hub</a>
+            <span class="game-title">π MAHJONG</span>
+        </div>
+        <div class="stats-area">
+            <div class="stat-box"><span class="stat-label">SCORE</span><span id="score-display" class="stat-value">0</span></div>
+            <div class="stat-box"><span class="stat-label">PAIRS</span><span id="pairs-display" class="stat-value">0/72</span></div>
+            <button id="btn-mute" class="mute-btn">🔊</button>
+        </div>
+    </header>
+
+    <!-- ═══ 게임 영역: 중앙 자동 확장 (flex: 1) ═══ -->
+    <main id="canvas-area">
+        <div id="canvas-wrapper">
+            <canvas id="game-canvas"></canvas>
+            <div id="message-overlay" class="message-bubble hidden"></div>
+        </div>
+    </main>
+
+    <!-- ═══ 하단 컨트롤: 마작 전용 아이템 ═══ -->
+    <footer id="controls">
+        <div class="item-bar">
+            <button id="btn-auto" class="item-btn" title="자동 맞춤">
+                <span class="item-icon">🤖</span>
+                <span class="item-label">AUTO</span>
+                <span id="auto-count" class="item-cost">2/2</span>
+            </button>
+            <button id="btn-hint" class="item-btn" title="힌트 (1 Pi)">
+                <span class="item-icon">💡</span>
+                <span class="item-label">HINT</span>
+                <span class="item-cost">1 π</span>
+            </button>
+            <button id="btn-shuffle" class="item-btn" title="셔플 (2 Pi)">
+                <span class="item-icon">🔀</span>
+                <span class="item-label">MIX</span>
+                <span class="item-cost">2 π</span>
+            </button>
+        </div>
+        <button id="btn-pause" class="pause-btn">⏸</button>
+    </footer>
+
+    <!-- ═══ 오버레이 (Body 직속) ═══ -->
+    <div id="start-overlay" class="overlay active">
+        <div class="ov-bg">π</div>
+        <h2 class="ov-title">π MAHJONG</h2>
+        <p class="ov-desc">상하이 솔리테어의 정점!<br>모든 짝을 맞춰 보드를 비우고 π를 획득하세요.</p>
+        <button id="btn-start" class="btn primary">▶ START MAHJONG</button>
+        <button id="btn-tutorial" class="btn secondary">? HOW TO PLAY</button>
+        <p id="username-display" class="ov-user">Loading Pi...</p>
+    </div>
+
+    <!-- 팝업 오버레이 (일시정지/게임종료 통합) -->
+    <div id="popup-screen" class="overlay">
+        <div class="modal-content glass">
+            <h2 id="popup-title" class="ov-title">PAUSED</h2>
+            <div id="popup-content" class="popup-info"></div>
+            <div class="btn-group">
+                <button id="btn-resume" class="btn primary">RESUME</button>
+                <button id="btn-restart" class="btn secondary">RESTART</button>
+            </div>
+            <a href="../index.html" class="btn secondary">QUIT TO HUB</a>
+        </div>
+    </div>
+
+    <!-- 튜토리얼 오버레이 -->
+    <div id="tutorial-screen" class="overlay">
+        <div class="modal-content glass tutorial-content">
+            <h2 class="ov-title">HOW TO PLAY</h2>
+            <div class="scroll-area">
+                <p>🎯 <strong>목표:</strong> 모든 마작패의 짝을 찾아 제거하세요.</p>
+                <p>👉 <strong>자유 패:</strong> 위가 비어있고, 좌/우 중 한 곳 이상이 비어있어야 합니다.</p>
+                <p>👉 <strong>짝 맞추기:</strong> 같은 모양 패를 선택하세요. (꽃/계절패는 종류만 같으면 매치 가능)</p>
+                <p>💡 <strong>아이템:</strong> Pi를 사용하여 힌트나 셔플을 활용할 수 있습니다.</p>
+            </div>
+            <button id="btn-close-tutorial" class="btn primary">CLOSE</button>
+        </div>
+    </div>
+
+    <script src="js/mahjongLogic.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

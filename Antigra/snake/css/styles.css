@@ -1,0 +1,157 @@
+/* ═══ π SNAKE Global Styles ═══ */
+:root {
+    --purple: #A855F7;
+    --purple-dark: #6B3FA0;
+    --gold: #F5A623;
+    --gold-light: #FFCC55;
+    --bg-dark: #04020D;
+    --text: #F8FAFC;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(18, 12, 38, 0.85);
+    --danger: #FF4B6E;
+    --success: #2ED573;
+    --snake-green: #2ECC71;
+    --font-a: 'Orbitron', sans-serif;
+    --font-b: 'Press Start 2P', cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    width: 100vw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: var(--font-a);
+    overflow: hidden;
+}
+
+/* ═══ 1. 헤더 (고정) ═══ */
+#game-header {
+    flex-shrink: 0;
+    height: 60px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border-bottom: 2px solid var(--purple-dark);
+    z-index: 100;
+}
+
+.logo-area { display: flex; align-items: center; gap: 0.8rem; }
+.btn-back { text-decoration: none; color: var(--purple); font-size: 0.8rem; font-weight: 900; }
+.game-title { font-family: var(--font-b); font-size: 0.7rem; color: var(--snake-green); }
+
+.stats-area { display: flex; align-items: center; gap: 1rem; }
+.stat-box { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+.stat-label { font-size: 0.38rem; color: var(--gold); font-family: var(--font-b); }
+.stat-value { font-size: 0.9rem; font-weight: 700; color: #fff; }
+
+.mute-btn {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 1rem; cursor: pointer; padding: 0.1rem 0.3rem;
+}
+
+/* ═══ 2. 메인 게임 영역 ═══ */
+#canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: radial-gradient(circle at center, #0D0821 0%, #04020D 100%);
+}
+
+#canvas-wrapper {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+}
+
+#game-canvas {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    border: 1px solid var(--purple-dark);
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.1);
+    background: rgba(0,0,0,0.5);
+    image-rendering: pixelated;
+}
+
+/* ═══ 3. 하단 컨트롤 ═══ */
+#controls {
+    flex-shrink: 0;
+    height: 180px;
+    background: var(--glass);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+}
+
+.control-hint { font-size: 0.5rem; color: var(--gold); opacity: 0.6; margin-bottom: 10px; font-family: var(--font-b); }
+
+.dpad { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.dpad-mid { display: flex; align-items: center; gap: 10px; }
+
+.ctrl-btn {
+    width: 54px; height: 50px;
+    border-radius: 12px;
+    border: 1px solid var(--purple);
+    background: rgba(168, 85, 247, 0.1);
+    color: #fff; font-size: 1.2rem;
+    display: flex; justify-content: center; align-items: center;
+    user-select: none;
+}
+.ctrl-btn:active, .ctrl-btn.active { background: var(--purple); transform: scale(0.95); }
+
+.dpad-center {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--purple-dark);
+    color: var(--gold);
+    display: flex; justify-content: center; align-items: center;
+    font-weight: 900; font-size: 1.5rem;
+    box-shadow: 0 0 15px var(--purple);
+}
+
+.ctrl-btn.pause { position: absolute; right: 20px; bottom: 40px; width: 44px; height: 44px; opacity: 0.7; }
+
+/* ═══ 4. 오버레이 ═══ */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(4, 2, 13, 0.95);
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 2rem; z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+.overlay.active { display: flex; }
+
+.ov-bg { position: absolute; font-size: 20rem; font-weight: 900; color: var(--snake-green); opacity: 0.05; pointer-events: none; z-index: -1; }
+.ov-title { font-family: var(--font-b); font-size: 1.4rem; color: var(--snake-green); margin-bottom: 2rem; }
+.ov-title.danger { color: var(--danger); }
+
+.ov-desc { font-size: 0.8rem; opacity: 0.8; margin-bottom: 2rem; line-height: 1.6; }
+
+.btn {
+    width: 100%; max-width: 260px; padding: 1rem; border-radius: 12px;
+    font-family: var(--font-a); font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; border: none; transition: 0.2s; margin-bottom: 0.8rem;
+}
+.btn.primary { background: linear-gradient(135deg, var(--gold), #D97706); color: #000; }
+.btn.secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
+
+.result-box { width: 100%; max-width: 260px; background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem; }
+.result-row { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.8rem; }
+.rv.gold { color: var(--gold-light); }
+
+@media (max-width: 480px) {
+    #controls { height: 160px; }
+    .ctrl-btn { width: 48px; height: 44px; }
+    .dpad-center { width: 50px; height: 50px; font-size: 1.2rem; }
+}

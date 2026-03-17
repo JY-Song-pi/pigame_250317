@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>π ARCADE — Pi Network 고전 게임</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/hub.css">
+</head>
+
+<body>
+
+    <!-- 별빛 파티클 (JS로 생성) -->
+    <canvas id="star-canvas"></canvas>
+
+    <div id="hub-container">
+
+        <!-- ═══ 헤더 ═══ -->
+        <header class="hub-header">
+            <div class="brand">
+                <div class="pi-logo">π</div>
+                <div class="brand-text">
+                    <h1>Pi Arcade</h1>
+                    <p class="brand-sub">Pi Network 고전 게임 센터</p>
+                </div>
+            </div>
+            <button id="btn-pi-login" class="btn-login">
+                <span class="pi-icon">π</span> Pi Login
+            </button>
+        </header>
+
+        <!-- ═══ 히어로 배너 ═══ -->
+        <section class="hero">
+            <div class="hero-text">
+                <h2 class="hero-title">고전 오락실 게임</h2>
+                <p class="hero-sub">Pi Network 생태계에서 즐기는<br>최고의 클래식 아케이드 게임</p>
+            </div>
+            <div class="hero-badge">
+                <span class="badge-ring"></span>
+                <span class="badge-ring ring2"></span>
+                <span class="badge-center">PLAY</span>
+            </div>
+        </section>
+
+        <!-- ═══ 게임 그리드 ═══ -->
+        <section class="games-section">
+            <h3 class="section-title">Arcade Classics</h3>
+            <div class="games-grid">
+
+                <!-- 테트리스 카드 (활성) -->
+                <a href="tetris/index.html" class="game-card active" id="card-tetris">
+                    <div class="card-glow"></div>
+                    <div class="card-preview tetris-preview">
+                        <div class="tetra-block" style="--c:#A855F7"></div>
+                        <div class="tetra-block" style="--c:#F5A623;margin-top:12px;"></div>
+                        <div class="tetra-block" style="--c:#C084FC;margin-top:24px;"></div>
+                        <div class="tetra-block" style="--c:#FFCC55;margin-top:6px;"></div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">CLASSIC</span>
+                        <h4 class="card-title">π Tetris</h4>
+                        <p class="card-desc">Pi Network 테트리스.<br>블록을 쌓고 줄을 지워라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 스네이크 카드 (활성) -->
+                <a href="snake/index.html" class="game-card active" id="card-snake">
+                    <div class="card-glow"></div>
+                    <div class="card-preview snake-preview">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <polyline points="15,40 40,40 40,20 65,20 65,60" stroke="#2ED573" stroke-width="8"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="65" cy="60" r="8" fill="#2ED573" />
+                            <circle cx="30" cy="55" r="5" fill="#F5A623" opacity="0.9" />
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">CLASSIC</span>
+                        <h4 class="card-title">π Snake</h4>
+                        <p class="card-desc">뱀을 조종해 π를 먹고<br>Pi 코인을 획득하라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 벽돌깨기 카드 (활성) -->
+                <a href="breakout/index.html" class="game-card active" id="card-breakout">
+                    <div class="card-glow"></div>
+                    <div class="card-preview breakout-preview">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <rect x="5" y="8" width="20" height="10" rx="3" fill="#A855F7" opacity="0.9" />
+                            <rect x="30" y="8" width="20" height="10" rx="3" fill="#F5A623" opacity="0.9" />
+                            <rect x="55" y="8" width="20" height="10" rx="3" fill="#C084FC" opacity="0.9" />
+                            <rect x="5" y="22" width="20" height="10" rx="3" fill="#FFCC55" opacity="0.7" />
+                            <rect x="30" y="22" width="20" height="10" rx="3" fill="#A855F7" opacity="0.7" />
+                            <rect x="55" y="22" width="20" height="10" rx="3" fill="#F5A623" opacity="0.7" />
+                            <circle cx="40" cy="55" r="6" fill="white" />
+                            <rect x="20" y="68" width="40" height="8" rx="4" fill="#8B5CC8" />
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">ARCADE</span>
+                        <h4 class="card-title">π Breakout</h4>
+                        <p class="card-desc">공을 튕겨 벽돌을 모두<br>부숴라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 팩맨 카드 (활성) -->
+                <a href="pacman/index.html" class="game-card active" id="card-pacman">
+                    <div class="card-glow"></div>
+                    <div class="card-preview pacman-preview">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <path d="M40,40 L72,25 A32,32 0 1,0 72,55 Z" fill="#FFE000" />
+                            <circle cx="52" cy="18" r="4" fill="white" />
+                            <circle cx="72" cy="32" r="5" fill="#6B3FA0" opacity="0.9" />
+                            <circle cx="72" cy="48" r="5" fill="#6B3FA0" opacity="0.9" />
+                            <text x="25" y="50" font-size="10" fill="#F5A623" font-family="Arial"
+                                font-weight="bold">π</text>
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">CLASSIC</span>
+                        <h4 class="card-title">π Pac-Man</h4>
+                        <p class="card-desc">미로를 누비며 π를 먹고<br>Pi 코인을 획득하라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 갤러가 카드 (활성) -->
+                <a href="galaga/index.html" class="game-card active" id="card-galaga">
+                    <div class="card-glow"></div>
+                    <div class="card-preview galaga-preview">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <!-- 플레이어 기체 -->
+                            <path d="M40,20 L55,50 L25,50 Z" fill="#4B9EFF" />
+                            <rect x="38" y="35" width="4" height="6" fill="white" />
+                            <!-- 적군들 -->
+                            <rect x="15" y="10" width="10" height="8" fill="#FF4B6E" />
+                            <rect x="35" y="5" width="10" height="8" fill="#FFE000" />
+                            <rect x="55" y="10" width="10" height="8" fill="#00CED1" />
+                            <!-- 미사일 -->
+                            <rect x="39" y="30" width="2" height="6" fill="#FFCC55" />
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">ARCADE</span>
+                        <h4 class="card-title">π Galaga</h4>
+                        <p class="card-desc">외계 함대를 격파하고<br>Pi 코인 보상을 획득하라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- ═══ 전통 게임 섹션 ═══ -->
+        <section class="games-section">
+            <h3 class="section-title">Traditional Experience</h3>
+            <div class="games-grid">
+
+                <!-- 고스톱 카드 -->
+                <a href="gostop/index.html" class="game-card active" id="card-gostop">
+                    <div class="card-glow"></div>
+                    <div class="card-preview gostop-preview">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <rect x="25" y="15" width="30" height="45" rx="4" fill="#C42126" />
+                            <rect x="30" y="20" width="20" height="35" rx="2" fill="white" opacity="0.1" />
+                            <circle cx="40" cy="38" r="10" fill="#F5A623" />
+                            <text x="36" y="42" font-size="12" fill="#000" font-weight="900">π</text>
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">TRADITIONAL</span>
+                        <h4 class="card-title">π Go-Stop</h4>
+                        <p class="card-desc">전통의 묘미와 전략.<br>Pi 보너스 GO를 외쳐라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 마작 카드 -->
+                <a href="mahjong/index.html" class="game-card active" id="card-mahjong">
+                    <div class="card-glow"></div>
+                    <div class="card-preview mahjong-preview">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <rect x="22" y="18" width="36" height="44" rx="5" fill="#fffdf0" />
+                            <rect x="25" y="21" width="36" height="44" rx="5" fill="#d4cbb3" opacity="0.3" />
+                            <text x="32" y="48" font-size="28" fill="#14213d" font-weight="900">π</text>
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">PUZZLE</span>
+                        <h4 class="card-title">π Mahjong</h4>
+                        <p class="card-desc">상하이 솔리테어의 정점.<br>지혜를 모아 보드를 비워라!</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 플레이</span>
+                            <span class="card-status ready">READY</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- ═══ 운세 서비스 섹션 (Coming Soon) ═══ -->
+        <section class="games-section upcoming">
+            <h3 class="section-title">π Divination (Coming Soon)</h3>
+            <div class="games-grid">
+
+                <!-- 사주 카드 (활성) -->
+                <a href="saju/index.html" class="game-card active" id="card-saju">
+                    <div class="card-glow"></div>
+                    <div class="card-preview saju-preview">
+                        <div class="crystal-ball">🔮</div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">SAJU</span>
+                        <h4 class="card-title">π 운명 (Saju)</h4>
+                        <p class="card-desc">당신의 생년월일로 확인하는<br>파이 네트워크 전통 사주 서비스.</p>
+                        <div class="card-footer">
+                            <span class="play-label">▶ 확인하기</span>
+                            <span class="card-status ready">OPEN</span>
+                        </div>
+                    </div>
+                </a>
+
+                <div class="game-card locked">
+                    <div class="card-preview tarot-preview">
+                        <div class="tarot-card-stack">🃏</div>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">TAROT</span>
+                        <h4 class="card-title">π 타로 (Tarot)</h4>
+                        <p class="card-desc">신비로운 카드로 점쳐보는<br>오늘의 파이 행운.</p>
+                        <div class="card-footer">
+                            <span class="play-label">COMING SOON</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══ 푸터 ═══ -->
+        <footer class="hub-footer">
+            <p>© 2025 Pi Network Arcade &nbsp;·&nbsp; Powered by <span class="gold">π Pi Network</span></p>
+        </footer>
+
+    </div>
+
+    <script>
+        // ── 별빛 배경 캔버스 ──
+        (function () {
+            const cvs = document.getElementById('star-canvas');
+            const ctx = cvs.getContext('2d');
+            let W, H, stars = [];
+            function resize() {
+                W = cvs.width = window.innerWidth;
+                H = cvs.height = window.innerHeight;
+            }
+            function createStars(n) {
+                stars = [];
+                for (let i = 0; i < n; i++) {
+                    stars.push({
+                        x: Math.random() * W, y: Math.random() * H,
+                        r: Math.random() * 1.5 + 0.3,
+                        a: Math.random(),
+                        speed: Math.random() * 0.008 + 0.003,
+                        color: Math.random() > 0.5 ? '#F5A623' : '#A855F7'
+                    });
+                }
+            }
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                stars.forEach(s => {
+                    s.a += s.speed;
+                    const alpha = (Math.sin(s.a) * 0.5 + 0.5) * 0.8 + 0.1;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = s.color;
+                    ctx.globalAlpha = alpha;
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(draw);
+            }
+            window.addEventListener('resize', () => { resize(); createStars(120); });
+            resize(); createStars(120); draw();
+        })();
+
+        // ── Pi SDK 로그인 ──
+        document.getElementById('btn-pi-login').addEventListener('click', async () => {
+            try {
+                if (typeof Pi !== 'undefined') {
+                    Pi.init({ version: '2.0', sandbox: true });
+                    const user = await Pi.authenticate(['username'], () => { });
+                    document.getElementById('btn-pi-login').textContent = 'π ' + user.user.username;
+                }
+            } catch (e) { console.warn('Pi 로그인:', e); }
+        });
+
+        // ── 카드 호버 파티클 (간단) ──
+        document.querySelectorAll('.game-card.active').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.querySelector('.card-glow').style.opacity = '1';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.querySelector('.card-glow').style.opacity = '0';
+            });
+        });
+    </script>
+</body>
+
+</html>

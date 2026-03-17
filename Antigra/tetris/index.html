@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>π TETRIS — Pi Network Arcade</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=3">
+</head>
+<body>
+    <!-- ═══ 헤더: 최상단 고정 (flex-shrink: 0) ═══ -->
+    <header id="game-header">
+        <div class="logo-area">
+            <a href="../index.html" class="btn-back">← Hub</a>
+            <span class="game-title">π TETRIS</span>
+        </div>
+        <div class="stats-area">
+            <div class="stat-box"><span class="stat-label">SCORE</span><span id="score" class="stat-value">0</span></div>
+            <div class="stat-box"><span class="stat-label">LINES</span><span id="lines" class="stat-value">0</span></div>
+            <div class="stat-box"><span class="stat-label">LEVEL</span><span id="level" class="stat-value">1</span></div>
+            <button id="btn-mute" class="mute-btn">🔊</button>
+        </div>
+    </header>
+
+    <!-- ═══ 게임 영역: 중앙 자동 확장 (flex: 1) ═══ -->
+    <main id="canvas-area">
+        <div id="canvas-wrapper">
+            <canvas id="game-canvas"></canvas>
+        </div>
+        <div id="side-panel">
+            <div class="next-box">
+                <span class="stat-label">NEXT</span>
+                <canvas id="next-canvas"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══ 하단 컨트롤: 모바일 터치 패드 ═══ -->
+    <footer id="controls">
+        <div class="move-controls">
+            <button id="btn-rotate" class="ctrl-btn rotate">ROTATE</button>
+            <button id="btn-left" class="ctrl-btn">◀</button>
+            <button id="btn-drop" class="ctrl-btn drop">▼</button>
+            <button id="btn-right" class="ctrl-btn">▶</button>
+        </div>
+        <div class="action-controls">
+            <button id="btn-pause" class="ctrl-btn pause">⏸</button>
+        </div>
+    </footer>
+
+    <!-- ═══ 오버레이 (Body 직속, position: fixed) ═══ -->
+    <div id="start-overlay" class="overlay active">
+        <div class="ov-bg">π</div>
+        <h2 class="ov-title">π TETRIS</h2>
+        <p class="ov-desc">블록을 쌓고 줄을 지워라!<br>Pi Network 테트리스 챌린지</p>
+        <button id="btn-start" class="btn primary">▶ START MISSION</button>
+        <button id="btn-login" class="btn secondary">π Pi Login</button>
+        <p id="user-info" class="ov-user"></p>
+    </div>
+
+    <div id="game-over-overlay" class="overlay">
+        <div class="ov-bg">π</div>
+        <h2 class="ov-title danger">GAME OVER</h2>
+        <div class="result-box">
+            <div class="result-row"><span>최종 점수</span><span id="final-score" class="rv">0</span></div>
+            <div class="result-row"><span>최고 점수</span><span id="final-best" class="rv">0</span></div>
+            <div class="result-row"><span>지운 줄</span><span id="final-lines" class="rv gold">0</span></div>
+        </div>
+        <button id="btn-restart" class="btn primary">▶ 다시 도전 (RESTART)</button>
+        <a href="../index.html" class="btn secondary">← Back to Hub</a>
+    </div>
+
+    <div id="pause-overlay" class="overlay">
+        <div class="ov-bg">π</div>
+        <h2 class="ov-title">PAUSED</h2>
+        <button id="btn-resume" class="btn primary">▶ RESUME Game</button>
+    </div>
+
+    <script src="js/piIntegration.js?v=3"></script>
+    <script src="js/audio.js?v=3"></script>
+    <script src="js/tetrisLogic.js?v=3"></script>
+    <script src="js/app.js?v=3"></script>
+</body>
+</html>
