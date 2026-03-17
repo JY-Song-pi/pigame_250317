@@ -197,12 +197,12 @@ const PacmanGame = (() => {
             mouthDir: 1,
         };
 
-        // 유령 초기화 (집에서 시작)
+        // 유령 초기화 (집 내부 위치 조정)
         ghosts = [
-            _makeGhost(9, 9, CFG.C_GHOST[0], 500),
-            _makeGhost(8, 10, CFG.C_GHOST[1], 1000),
-            _makeGhost(9, 10, CFG.C_GHOST[2], 1500),
-            _makeGhost(10, 10, CFG.C_GHOST[3], 2000),
+            _makeGhost(9, 8, CFG.C_GHOST[0], 0),    // Blinky (집 밖 바로 앞)
+            _makeGhost(8, 10, CFG.C_GHOST[1], 1500), // Pinky
+            _makeGhost(9, 10, CFG.C_GHOST[2], 3000), // Inky
+            _makeGhost(10, 10, CFG.C_GHOST[3], 4500), // Clyde
         ];
 
         state = 'playing';
@@ -215,16 +215,20 @@ const PacmanGame = (() => {
     }
 
     function _makeGhost(col, row, color, delay) {
+        const gx = col * CFG.CELL + CFG.CELL / 2;
+        const gy = row * CFG.CELL + CFG.CELL / 2;
+        // 집 경계 (8~10 col, 9~11 row 내외)
+        const inHouse = (col >= 7 && col <= 11 && row >= 9 && row <= 11);
         return {
-            x: col * CFG.CELL + CFG.CELL / 2,
-            y: row * CFG.CELL + CFG.CELL / 2,
+            x: gx, y: gy,
             dx: 0, dy: 0,
             color,
             scared: false,
             eaten: false,
-            delay: delay, // 초기 대기 ms
-            homeX: col * CFG.CELL + CFG.CELL / 2,
-            homeY: row * CFG.CELL + CFG.CELL / 2,
+            leaving: inHouse, // 집 안에 있으면 탈출 모드
+            delay: delay,
+            homeX: gx,
+            homeY: gy,
             timer: 0,
             flashTimer: 0,
         };
@@ -389,27 +393,52 @@ const PacmanGame = (() => {
             // 방향 전환 (그리드 정렬 때만)
             if (g.timer >= 200) {
                 g.timer = 0;
-                // 이미 먹힌 상태면 집으로 복귀
-                const targetX = g.eaten
-                    ? g.homeX
-                    : g.scared
-                        ? pacman.x + (Math.random() - 0.5) * CFG.COLS * CFG.CELL
-                        : _ghostTarget(g);
-                const targetY = g.eaten
-                    ? g.homeY
-                    : g.scared
-                        ? pacman.y + (Math.random() - 0.5) * CFG.ROWS * CFG.CELL
-                        : pacman.y;
+
+                // 유령 집(jail) 좌표 및 출구
+                const houseLeft = 7 * CFG.CELL;
+                const houseRight = 11 * CFG.CELL;
+                const houseTop = 9 * CFG.CELL;
+                const houseBottom = 11 * CFG.CELL;
+                const exitX = 9 * CFG.CELL + CFG.CELL / 2;
+                const exitY = 8 * CFG.CELL + CFG.CELL / 2;
+
+                // 집 탈출 로직 체크
+                if (g.x > houseLeft && g.x < houseRight && g.y > houseTop && g.y < houseBottom) {
+                    g.leaving = true;
+                } else if (Math.abs(g.x - exitX) < 4 && Math.abs(g.y - exitY) < 4) {
+                    g.leaving = false;
+                }
+
+                // 타겟 설정
+                let targetX, targetY;
+                if (g.eaten) {
+                    targetX = g.homeX;
+                    targetY = g.homeY;
+                } else if (g.leaving) {
+                    // 집 탈출 중일 때는 무조건 출구 타겟팅
+                    targetX = exitX;
+                    targetY = exitY;
+                } else if (g.scared) {
+                    targetX = pacman.x + (Math.random() - 0.5) * CFG.COLS * CFG.CELL;
+                    targetY = pacman.y + (Math.random() - 0.5) * CFG.ROWS * CFG.CELL;
+                } else {
+                    targetX = _ghostTargetX(g);
+                    targetY = _ghostTargetY(g);
+                }
 
                 // 가능한 방향 중 목표 가까운 방향 선택
                 let bestDir = null, bestDist = Infinity;
                 _shuffle(dirs);
                 for (const d of dirs) {
-                    if (g.dx !== 0 && d.dx === -g.dx && d.dy === 0) continue; // 뒤로 못감
+                    // 뒤로가기 방지 (단, 집 안이나 막다른 길에서는 허용될 수도 있음)
+                    if (g.dx !== 0 && d.dx === -g.dx && d.dy === 0) continue; 
                     if (g.dy !== 0 && d.dy === -g.dy && d.dx === 0) continue;
+
                     const nx = g.x + d.dx * CFG.CELL;
                     const ny = g.y + d.dy * CFG.CELL;
-                    if (!_wallHitGhost(nx, ny)) {
+
+                    // 벽 체크 - 집 내부 문(9, 8.5 위치)은 통과 허용 처리
+                    if (!_wallHitGhost(nx, ny, g.leaving || g.eaten)) {
                         const dist = Math.hypot(nx - targetX, ny - targetY);
                         if (dist < bestDist) { bestDist = dist; bestDir = d; }
                     }
@@ -433,18 +462,28 @@ const PacmanGame = (() => {
         });
     }
 
-    function _ghostTarget(g) {
-        // 간단 AI: 팩맨 타겟
-        return pacman.x + (Math.random() < 0.7 ? 0 : (Math.random() - 0.5) * 5 * CFG.CELL);
+    function _ghostTargetX(g) {
+        // 간단 AI: 팩맨 X 타겟
+        return pacman.x + (Math.random() < 0.2 ? (Math.random() - 0.5) * 4 * CFG.CELL : 0);
     }
 
-    function _wallHitGhost(px, py) {
+    function _ghostTargetY(g) {
+        // 간단 AI: 팩맨 Y 타겟
+        return pacman.y;
+    }
+
+    function _wallHitGhost(px, py, isSpecialMode) {
         const r = CFG.CELL * 0.32;
         for (const [ox, oy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
             const cx = px + ox * r, cy = py + oy * r;
             const col = Math.floor(cx / CFG.CELL);
             const row = Math.floor(cy / CFG.CELL);
+
             if (row < 0 || row >= CFG.ROWS || col < 0 || col >= CFG.COLS) continue;
+            
+            // 유령 집 입구 특수 처리 (row 9, col 8-10 부근)
+            if (isSpecialMode && row === 9 && col === 9) return false;
+
             if (map[row][col] === 1) return true;
         }
         return false;
@@ -500,10 +539,11 @@ const PacmanGame = (() => {
         pacman.y = 16 * CFG.CELL + CFG.CELL / 2;
         pacman.dx = pacman.dy = 0;
         pacman.nextDx = pacman.nextDy = 0;
-        ghosts.forEach(g => {
+        ghosts.forEach((g, idx) => {
             g.x = g.homeX; g.y = g.homeY;
             g.eaten = false; g.scared = false;
-            g.dx = g.dy = 0; g.delay = 500;
+            g.dx = g.dy = 0; g.delay = 500 + idx * 1000;
+            g.leaving = true; // 부활 시 다시 탈출 모드
         });
         powerActive = false; scaredTimer = 0;
     }
