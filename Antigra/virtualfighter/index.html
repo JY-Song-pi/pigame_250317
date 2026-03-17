@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>π Virtua Fighter — Pi Network</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- HUD: 상단 정보 바 -->
+        <header id="hud">
+            <div class="hud-side p1-side">
+                <div class="char-name">PIONEER</div>
+                <div class="hp-wrap">
+                    <div class="hp-bg">
+                        <div id="p1-hp" class="hp-bar p1-bar"></div>
+                        <div id="p1-hp-ghost" class="hp-ghost"></div>
+                    </div>
+                </div>
+                <div class="round-dots" id="p1-rounds"></div>
+            </div>
+
+            <div class="hud-center">
+                <div id="match-timer" class="timer">45</div>
+                <div id="round-label" class="round-label">ROUND 1</div>
+                <div id="announce" class="announce hidden"></div>
+            </div>
+
+            <div class="hud-side p2-side">
+                <div class="char-name right">NODE RUNNER</div>
+                <div class="hp-wrap">
+                    <div class="hp-bg">
+                        <div id="p2-hp" class="hp-bar p2-bar"></div>
+                        <div id="p2-hp-ghost" class="hp-ghost ghost-right"></div>
+                    </div>
+                </div>
+                <div class="round-dots right" id="p2-rounds"></div>
+            </div>
+        </header>
+
+        <!-- 게임 캔버스 -->
+        <main id="stage">
+            <canvas id="vf-canvas"></canvas>
+            <!-- 프레임 데이터 디버그 오버레이 -->
+            <div id="debug-panel">
+                <div id="p1-debug" class="debug-info"></div>
+                <div id="p2-debug" class="debug-info right"></div>
+            </div>
+
+            <!-- 오버레이 메뉴 -->
+            <div id="overlay">
+                <div class="overlay-box">
+                    <h1 id="overlay-title">π VIRTUA FIGHTER</h1>
+                    <p id="overlay-sub">Phase 1 — FSM Demo</p>
+                    <div class="controls-guide">
+                        <div class="ctrl-col">
+                            <div class="ctrl-title">🎮 PLAYER 1 (Pioneer)</div>
+                            <div class="ctrl-row"><kbd>A/D</kbd> 이동</div>
+                            <div class="ctrl-row"><kbd>W</kbd> 점프 / <kbd>S</kbd> 앉기</div>
+                            <div class="ctrl-row"><kbd>J</kbd> Punch · <kbd>K</kbd> Kick · <kbd>L</kbd> Guard</div>
+                            <div class="ctrl-row"><kbd>→+J</kbd> 소배트 (HIGH)</div>
+                            <div class="ctrl-row"><kbd>↓+K</kbd> 로우킥 (LOW)</div>
+                        </div>
+                    </div>
+                    <button id="start-btn" class="start-btn">▶ START FIGHT</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 모바일 컨트롤 -->
+        <footer id="mobile-ctrl">
+            <div class="dpad">
+                <div class="dpad-row">
+                    <button id="m-up" class="dpad-btn top">▲</button>
+                </div>
+                <div class="dpad-row mid">
+                    <button id="m-left" class="dpad-btn">◀</button>
+                    <div class="dpad-center"></div>
+                    <button id="m-right" class="dpad-btn">▶</button>
+                </div>
+                <div class="dpad-row">
+                    <button id="m-down" class="dpad-btn bot">▼</button>
+                </div>
+            </div>
+
+            <div class="action-pad">
+                <div class="action-row top-row">
+                    <button id="m-punch" class="act-btn punch">P</button>
+                    <button id="m-kick" class="act-btn kick">K</button>
+                </div>
+                <div class="action-row">
+                    <button id="m-guard" class="act-btn guard">G</button>
+                </div>
+            </div>
+        </footer>
+
+        <a href="../index.html" class="hub-link">← HUB</a>
+    </div>
+
+    <script src="js/vfInput.js"></script>
+    <script src="js/vfFSM.js"></script>
+    <script src="js/vfRenderer.js"></script>
+    <script src="js/vfGame.js"></script>
+</body>
+</html>
